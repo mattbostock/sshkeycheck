@@ -1,0 +1,15 @@
+{
+	"ImportPath": "github.com/mattbostock/checkmysshkey",
+	"GoVersion": "go1.4.2",
+	"Deps": [
+		{
+			"ImportPath": "github.com/Sirupsen/logrus",
+			"Comment": "v0.6.6-5-gecc16b3",
+			"Rev": "ecc16b3b2a583f3d5308ed4a3a4ce5cf45dbc68b"
+		},
+		{
+			"ImportPath": "golang.org/x/crypto/ssh",
+			"Rev": "1351f936d976c60a0a48d728281922cf63eafb8d"
+		}
+	]
+}

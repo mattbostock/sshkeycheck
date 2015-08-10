@@ -99,7 +99,7 @@ func serve(config *ssh.ServerConfig, nConn net.Conn) {
 		var table bytes.Buffer
 		tabWriter := new(tabwriter.Writer)
 		tabWriter.Init(&table, 5, 2, 2, ' ', 0)
-		// Note that using tabwriter, columns are tab-terminated
+		// Note that using tabwriter, columns are tab-terminated,
 		// not tab-delimited
 		fmt.Fprint(tabWriter, "Bits\tType\tFingerprint\tIssues\n")
 

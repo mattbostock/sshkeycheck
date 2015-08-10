@@ -92,6 +92,8 @@ func serve(config *ssh.ServerConfig, nConn net.Conn) {
 			}
 		}(requests)
 
+		markBlacklistedKeys(keys)
+
 		channel.Write([]byte(welcomeMsg))
 
 		var table bytes.Buffer
@@ -102,7 +104,7 @@ func serve(config *ssh.ServerConfig, nConn net.Conn) {
 		fmt.Fprint(tabWriter, "Bits\tType\tFingerprint\tIssues\n")
 
 		var issues string
-		var weak bool
+		var blacklisted, weak bool
 		for _, k := range keys {
 			issues = "No known issues"
 			length, err := k.BitLen()
@@ -116,6 +118,12 @@ func serve(config *ssh.ServerConfig, nConn net.Conn) {
 				weak = true
 			}
 
+			if k.blacklisted {
+				// being blacklisted takes priority of any key length weaknesses
+				issues = "BLACKLISTED"
+				blacklisted = true
+			}
+
 			fmt.Fprintf(tabWriter, "%d\t%s\t%s\t%s\t\n", length, k.key.Type(), k.Fingerprint(), issues)
 		}
 
@@ -124,6 +132,10 @@ func serve(config *ssh.ServerConfig, nConn net.Conn) {
 			log.Errorln("Error when flushing tab writer:", err)
 		}
 		channel.Write([]byte(strings.Replace(table.String(), "\n", "\n\r", -1)))
+
+		if blacklisted {
+			channel.Write([]byte(blacklistMsg))
+		}
 
 		if weak {
 			channel.Write([]byte(weakMsg))
@@ -163,6 +175,12 @@ func keyboardInteractiveCallback(ssh.ConnMetadata, ssh.KeyboardInteractiveChalle
 var (
 	agentMsg = strings.Replace(`CRITICAL: SSH agent forwarding is enabled; it is dangerous to enable agent forwarding
 	  for servers you do not trust as it allows them to log in to other servers as you.
+
+`, "\n", "\n\r", -1)
+
+	blacklistMsg = strings.Replace(`CRITICAL: You are using blacklisted key(s) that are known to be insecure.
+          You should replace them immediately.
+          See: https://www.debian.org/security/2008/dsa-1576
 
 `, "\n", "\n\r", -1)
 

@@ -8,10 +8,6 @@ presented to it for:
 
 The results are output back to the user over the SSH session.
 
-## TODO
-
-- [ ] Check keys against list of known weak keys
-
 ## Inspiration
 
 This toy project is heavily inspired by [Filippo Valsorda][]'s [whosthere][] server,

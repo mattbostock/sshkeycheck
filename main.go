@@ -16,6 +16,8 @@ func main() {
 		PublicKeyCallback:           publicKeyCallback,
 	}
 
+	loadBlacklistedKeys()
+
 	private, err := ssh.ParsePrivateKey([]byte(os.Getenv("HOST_PRIVATE_KEY")))
 	if err != nil {
 		log.Fatalln("Failed to parse host private key")

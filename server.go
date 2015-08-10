@@ -131,7 +131,9 @@ func serve(config *ssh.ServerConfig, nConn net.Conn) {
 		if err != nil {
 			log.Errorln("Error when flushing tab writer:", err)
 		}
-		channel.Write([]byte(strings.Replace(table.String(), "\n", "\n\r", -1)))
+		channel.Write([]byte(
+			strings.Replace(table.String(), "\n", "\n\r", -1) +
+				"\n\r"))
 
 		if blacklisted {
 			channel.Write([]byte(blacklistMsg))

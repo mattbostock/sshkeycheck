@@ -119,10 +119,10 @@ func serve(config *ssh.ServerConfig, nConn net.Conn) {
 
 		reqLock.Lock()
 		if agentFwd {
-			channel.Write(agentMsg)
+			channel.Write([]byte(agentMsg))
 		}
 		if x11 {
-			channel.Write(x11Msg)
+			channel.Write([]byte(x11Msg))
 		}
 
 		// Explicitly close the channel to end the session
@@ -149,6 +149,13 @@ func keyboardInteractiveCallback(ssh.ConnMetadata, ssh.KeyboardInteractiveChalle
 }
 
 var (
-	agentMsg = []byte("WARNING: SSH agent forwarding is enabled\n\r")
-	x11Msg   = []byte("WARNING: X11 forwarding is enabled\n\r")
+	agentMsg = strings.Replace(`CRITICAL: SSH agent forwarding is enabled; it is dangerous to enable agent forwarding
+	  for servers you do not trust as it allows them to log in to other servers as you.
+
+`, "\n", "\n\r", -1)
+
+	x11Msg = strings.Replace(`CRITICAL: X11 forwarding is enabled; it is dangerous to allow X11 forwarding
+	  for servers you do not trust as it allows them to access your desktop.
+
+`, "\n", "\n\r", -1)
 )

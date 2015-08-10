@@ -92,7 +92,7 @@ func serve(config *ssh.ServerConfig, nConn net.Conn) {
 			}
 		}(requests)
 
-		channel.Write([]byte("The public keys presented by your SSH client are:\n\r\n\r"))
+		channel.Write([]byte(welcomeMsg))
 
 		var table bytes.Buffer
 		tabWriter := new(tabwriter.Writer)
@@ -151,6 +151,16 @@ func keyboardInteractiveCallback(ssh.ConnMetadata, ssh.KeyboardInteractiveChalle
 var (
 	agentMsg = strings.Replace(`CRITICAL: SSH agent forwarding is enabled; it is dangerous to enable agent forwarding
 	  for servers you do not trust as it allows them to log in to other servers as you.
+
+`, "\n", "\n\r", -1)
+
+	welcomeMsg = strings.Replace(`This server checks your SSH public keys for known or potential
+security weaknesses.
+
+For more information, please see:
+https://github.com/mattbostock/sshkeycheck
+
+The public keys presented by your SSH client are:
 
 `, "\n", "\n\r", -1)
 

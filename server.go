@@ -99,16 +99,24 @@ func serve(config *ssh.ServerConfig, nConn net.Conn) {
 		tabWriter.Init(&table, 5, 2, 2, ' ', 0)
 		// Note that using tabwriter, columns are tab-terminated
 		// not tab-delimited
-		fmt.Fprint(tabWriter, "Bits\tType\tFingerprint\t\n")
+		fmt.Fprint(tabWriter, "Bits\tType\tFingerprint\tIssues\n")
 
+		var issues string
+		var weak bool
 		for _, k := range keys {
+			issues = "No known issues"
 			length, err := k.BitLen()
 
 			if err != nil {
 				log.Errorf("Failed to determine key length for %s key: %s", k.key.Type(), err)
 			}
 
-			fmt.Fprintf(tabWriter, "%d\t%s\t%s\t\n", length, k.key.Type(), k.Fingerprint())
+			if length < 2048 && k.key.Type() == ssh.KeyAlgoRSA {
+				issues = "WEAK KEY LENGTH"
+				weak = true
+			}
+
+			fmt.Fprintf(tabWriter, "%d\t%s\t%s\t%s\t\n", length, k.key.Type(), k.Fingerprint(), issues)
 		}
 
 		err = tabWriter.Flush()
@@ -116,6 +124,10 @@ func serve(config *ssh.ServerConfig, nConn net.Conn) {
 			log.Errorln("Error when flushing tab writer:", err)
 		}
 		channel.Write([]byte(strings.Replace(table.String(), "\n", "\n\r", -1)))
+
+		if weak {
+			channel.Write([]byte(weakMsg))
+		}
 
 		reqLock.Lock()
 		if agentFwd {
@@ -151,6 +163,11 @@ func keyboardInteractiveCallback(ssh.ConnMetadata, ssh.KeyboardInteractiveChalle
 var (
 	agentMsg = strings.Replace(`CRITICAL: SSH agent forwarding is enabled; it is dangerous to enable agent forwarding
 	  for servers you do not trust as it allows them to log in to other servers as you.
+
+`, "\n", "\n\r", -1)
+
+	weakMsg = strings.Replace(`WARNING:  You are using RSA key(s) with a length of less than 2048 bits.
+          Consider replacing them with a new key of 2048 bits or more.
 
 `, "\n", "\n\r", -1)
 

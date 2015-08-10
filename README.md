@@ -11,7 +11,6 @@ The results are output back to the user over the SSH session.
 ## TODO
 
 - [ ] Check keys against list of known weak keys
-- [ ] Highlight keys with a low number of bits
 
 ## Inspiration
 

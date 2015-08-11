@@ -27,6 +27,7 @@ func serve(config *ssh.ServerConfig, nConn net.Conn) {
 	conn, chans, reqs, err := ssh.NewServerConn(nConn, config)
 	if err != nil {
 		log.Warnln("Failed to handshake:", err)
+		return
 	}
 
 	defer func() {

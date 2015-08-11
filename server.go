@@ -59,6 +59,7 @@ func serve(config *ssh.ServerConfig, nConn net.Conn) {
 		defer channel.Close()
 		if err != nil {
 			log.Warnln("Could not accept channel:", err)
+			continue
 		}
 
 		agentFwd, x11 := false, false

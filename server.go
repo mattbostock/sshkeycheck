@@ -56,7 +56,6 @@ func serve(config *ssh.ServerConfig, nConn net.Conn) {
 		}
 
 		channel, requests, err := n.Accept()
-		defer channel.Close()
 		if err != nil {
 			log.Warnln("Could not accept channel:", err)
 			continue

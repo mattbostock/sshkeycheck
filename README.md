@@ -5,6 +5,7 @@ presented to it for:
 
 - [known weak keys][] vulnerable to the [Debian PRNG bug][]
 - potentially weak key lengths, e.g. 1024-bit RSA keys
+- DSA (ssh-dss) keys, which [OpenSSH no longer supports by default][]
 
 The results are output back to the user over the SSH session.
 
@@ -31,3 +32,4 @@ If you spot any problems, please raise an issue. Pull requests are also welcome.
 [whosthere]: https://github.com/FiloSottile/whosthere
 [Ben Cox]: https://twitter.com/Benjojo12
 [weak SSH keys on GitHub]: https://blog.benjojo.co.uk/post/auditing-github-users-keys
+[OpenSSH no longer supports by default]: http://www.openssh.com/txt/release-7.0

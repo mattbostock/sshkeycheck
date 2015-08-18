@@ -105,13 +105,18 @@ func serve(config *ssh.ServerConfig, nConn net.Conn) {
 		fmt.Fprint(tabWriter, "Bits\tType\tFingerprint\tIssues\n")
 
 		var issues string
-		var blacklisted, weak bool
+		var blacklisted, weak, dsa bool
 		for _, k := range keys {
 			issues = "No known issues"
 			length, err := k.BitLen()
 
 			if err != nil {
 				log.Errorf("Failed to determine key length for %s key: %s", k.key.Type(), err)
+			}
+
+			if k.key.Type() == ssh.KeyAlgoDSA {
+				issues = "DSA KEY"
+				dsa = true
 			}
 
 			if length < 2048 && k.key.Type() == ssh.KeyAlgoRSA {
@@ -138,6 +143,10 @@ func serve(config *ssh.ServerConfig, nConn net.Conn) {
 
 		if blacklisted {
 			channel.Write([]byte(blacklistMsg))
+		}
+
+		if dsa {
+			channel.Write([]byte(dsaMsg))
 		}
 
 		if weak {
@@ -184,6 +193,12 @@ var (
 	blacklistMsg = strings.Replace(`CRITICAL: You are using blacklisted key(s) that are known to be insecure.
           You should replace them immediately.
           See: https://www.debian.org/security/2008/dsa-1576
+
+`, "\n", "\n\r", -1)
+
+	dsaMsg = strings.Replace(`WARNING:  You are using DSA (ssh-dss) key(s), which are no longer supported by
+	  default in OpenSSH version 7.0 and above.
+          Consider replacing them with a new RSA or ECDSA key.
 
 `, "\n", "\n\r", -1)
 

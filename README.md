@@ -17,6 +17,30 @@ In a terminal, connect to:
 ssh keycheck.mattbostock.com
 ```
 
+## Example output
+
+```
+$ ssh keycheck.mattbostock.com
+This server checks your SSH public keys for known or potential
+security weaknesses.
+
+For more information, please see:
+https://github.com/mattbostock/sshkeycheck
+
+The public keys presented by your SSH client are:
+
+Bits  Type                 Fingerprint                                      Issues
+4096  ssh-rsa              ed:9a:d2:5d:7b:c0:e5:cf:b9:bc:5c:6b:ce:3a:db:20  No known issues
+1024  ssh-dss              4a:0d:9b:b7:92:ba:0a:93:2a:2f:27:d7:58:73:74:91  DSA KEY
+384   ecdsa-sha2-nistp384  d8:99:74:7a:0b:d0:e0:be:d0:b1:93:ee:ee:0f:b5:a4  No known issues
+
+WARNING:  You are using DSA (ssh-dss) key(s), which are no longer supported by
+          default in OpenSSH 7.0 and above.
+          Consider replacing them with a new RSA or ECDSA key.
+
+Connection to keycheck.mattbostock.com closed.
+```
+
 ## Inspiration
 
 This toy project is heavily inspired by [Filippo Valsorda][]'s [whosthere][] server,

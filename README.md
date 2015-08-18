@@ -9,6 +9,14 @@ presented to it for:
 
 The results are output back to the user over the SSH session.
 
+## Demo
+
+In a terminal, connect to:
+
+```
+ssh keycheck.mattbostock.com
+```
+
 ## Inspiration
 
 This toy project is heavily inspired by [Filippo Valsorda][]'s [whosthere][] server,

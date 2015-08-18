@@ -3,7 +3,7 @@
 A small SSH server written in Go that checks any public keys
 presented to it for:
 
-- [known weak keys][]
+- [known weak keys][] vulnerable to the [Debian PRNG bug][]
 - potentially weak key lengths, e.g. 1024-bit RSA keys
 
 The results are output back to the user over the SSH session.
@@ -25,7 +25,8 @@ I'm not a cryptographer, nor am I an expert in SSH. Use at your own risk and dis
 
 If you spot any problems, please raise an issue. Pull requests are also welcome.
 
-[known weak keys]: https://www.debian.org/security/2008/dsa-1571
+[known weak keys]: https://github.com/g0tmi1k/debian-ssh
+[Debian PRNG bug]: https://www.debian.org/security/2008/dsa-1571
 [Filippo Valsorda]: https://twitter.com/FiloSottile
 [whosthere]: https://github.com/FiloSottile/whosthere
 [Ben Cox]: https://twitter.com/Benjojo12

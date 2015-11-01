@@ -13,7 +13,7 @@ import (
 
 const blacklistPath = "blacklist"
 
-var blacklist []string
+var blacklist = make(map[string]bool)
 
 func loadBlacklistedKeys() {
 	files, err := ioutil.ReadDir(blacklistPath)
@@ -34,7 +34,8 @@ func loadBlacklistedKeys() {
 
 		scanner := bufio.NewScanner(file)
 		for scanner.Scan() {
-			blacklist = append(blacklist, scanner.Text())
+			key := strings.TrimSpace(scanner.Text())
+			blacklist[key] = true
 		}
 
 		if err := scanner.Err(); err != nil {
@@ -46,11 +47,11 @@ func loadBlacklistedKeys() {
 }
 
 func markBlacklistedKeys(keys []*publicKey) {
-	for _, b := range blacklist {
-		for _, k := range keys {
-			if strings.TrimSpace(b) == strings.TrimSpace(string(ssh.MarshalAuthorizedKey(k.key))) {
-				k.blacklisted = true
-			}
+
+	for _, k := range keys {
+		key := strings.TrimSpace(string(ssh.MarshalAuthorizedKey(k.key)))
+		if blacklist[key] {
+			k.blacklisted = true
 		}
 	}
 

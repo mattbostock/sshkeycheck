@@ -9,14 +9,6 @@ presented to it for:
 
 The results are output back to the user over the SSH session.
 
-## Demo
-
-In a terminal, connect to:
-
-```
-ssh keycheck.mattbostock.com
-```
-
 ## Example output
 
 ```
